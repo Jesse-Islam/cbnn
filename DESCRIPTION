@@ -1,10 +1,10 @@
-Package: pmnn
+Package: cbnn
 Type: Package
-Title: Person Moment Neural networks
+Title: Case-Base Neural networks
 Version: 0.1.0
 Author: Jesse Islam
 Maintainer: The package maintainer <jesse.islam@mail.mcgill.ca>
-Description: Person Moment Neural networks (PMNN) as a flexible approach to neural network survival analysis. By sampling survival data into discrete moments, methods that predict probability may be used in a survival context that were not possible before.
+Description: Case-Base Neural Networks (CBNN) as a flexible approach to neural network survival analysis. By sampling survival data into discrete moments, methods that predict probability may be used in a survival context that were not possible before.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
