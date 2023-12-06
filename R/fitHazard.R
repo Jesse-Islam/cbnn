@@ -7,8 +7,10 @@
 #' @param cbnnPrep (list) output from prepcbnnPrep function.
 #' @param epochs (numeric) number of epochs to learn through.
 #' @param batchSize (numeric) Number of samples to use for each batch.
-#' @param verbose (numeric) tells keras::fit whether to be verbose during the
-#' learning process. 0=silent, 1=partial, 2=full.
+#' @param earlyStoppingCallbacks (list) expecting parameters for
+#' keras::callback_early_stopping as a list
+#' @param valData (list) A list of Lists. List[[1]][[1]] is the feature matrix,
+#' list[[1]][[2]] is the prediction,list[[2]] is the offset column. This is optional.
 #' @return (list) cbnnPrep: list from prepcbnnPrep passed in as argument,\cr
 #' resultOfFit: loss and metric over epochs,\cr
 #' xTrain: casebase sampled data that is used in learning phase,\cr
@@ -19,6 +21,7 @@
 #' library(casebase)
 #' library(magrittr)
 #' data<-casebase::ERSPC
+#' data$ScrArm<-as.numeric(data$ScrArm)-1
 #' eventVar<-"DeadOfPrCa"
 #' timeVar<-"Follow.Up.Time"
 #' features<-"ScrArm"
@@ -26,10 +29,10 @@
 #' nnOutput<-nnInput %>% keras::layer_dense(units=1, use_bias = TRUE)
 #' cbnnPrep<-prepCbnn(features, nnInput, nnOutput, data, offset=NA,timeVar,
 #' eventVar, ratio=10, compRisk=FALSE)
-#' fitHazard(cbnnPrep,epochs=1,batchSize=500,verbose=0)
+#' fit<-fitHazard(cbnnPrep,epochs=1,batchSize=500)
 #'
 #' @export
-fitHazard<-function(cbnnPrep,epochs=20000,batchSize=500,verbose=0){
+fitHazard<-function(cbnnPrep,epochs=20000,batchSize=500,earlyStoppingCallbacks=NULL,valData=NULL){
 
 
   offset<-as.matrix(cbnnPrep$offset)
@@ -40,19 +43,15 @@ fitHazard<-function(cbnnPrep,epochs=20000,batchSize=500,verbose=0){
   yTrain<-as.matrix(cbnnPrep$casebaseData[,c(which(colnames(cbnnPrep$casebaseData) %in% cbnnPrep$eventVar))])
   xTensor<-list(xTrain, offset)
 
-  resultOfFit<-cbnnPrep$network %>% keras::fit(x = xTensor,
-    y = yTrain,
-    epochs = epochs,#30000,
-    batchSize = batchSize,#54540,
-    verbose=verbose,callbacks=list(keras::callback_early_stopping(
-      monitor = "loss",
-      min_delta = 10^-6,
-      patience = 1000,
-      verbose = 1,
-      mode = c("auto"),
-      baseline =NULL,#lossCutOff,
-      restore_best_weights = F
-    )))
+
+    resultOfFit<-cbnnPrep$network %>% keras::fit(
+      x = xTensor,
+      y = yTrain,
+      epochs = epochs,
+      batch_size = batchSize,
+      validation_data=valData,
+      shuffle=T,
+      callbacks=earlyStoppingCallbacks,verbose=0)
 
   cbnnPrep[[length(cbnnPrep)+1]]<-resultOfFit
   names(cbnnPrep)[length(cbnnPrep)]<-"resultOfFit"

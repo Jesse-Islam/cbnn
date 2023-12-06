@@ -1,18 +1,26 @@
 Package: cbnn
 Type: Package
 Title: Case-Base Neural networks
-Version: 0.1.0
+Version: 0.2.0
 Author: Jesse Islam
 Maintainer: The package maintainer <jesse.islam@mail.mcgill.ca>
 Description: Case-Base Neural Networks (CBNN) as a flexible approach to neural network survival analysis. By sampling survival data into discrete moments, methods that predict probability may be used in a survival context that were not possible before.
-License: GPL-2
+License: GPL-2 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Imports:
-	keras (>= 2.3.0.0.9000),
-	casebase (>= 0.9.0.9000),
-	magrittr (>= 2.0.1)
+	keras (>= 2.13.0),
+	casebase (>= 0.10.3)
 Suggests: 
-    testthat (>= 3.0.0)
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    simsurv (>= 1.0.0),
+	  flexsurv (>= 2.2.2),
+	  survival (>= 3.5),
+  	riskRegression (>= 2023.09.08),
+  	ggplot2 (>= 3.4.4),
+  	magrittr (>= 2.0.3)
 Config/testthat/edition: 3
+VignetteBuilder: knitr

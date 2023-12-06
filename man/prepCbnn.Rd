@@ -13,7 +13,8 @@ prepCbnn(
   timeVar,
   eventVar,
   ratio = 100,
-  compRisk = FALSE
+  compRisk = FALSE,
+  kOptim = keras::optimizer_adam()
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ prepCbnn(
 \item{ratio}{(numeric) Number of base-series samples per case-series samples. Default=100.}
 
 \item{compRisk}{(boolean) states if modeling competing risks or single event.}
+
+\item{kOptim}{("keras.optimizers.adam.Adam") Optimizer of choice from keras. Default set to optimizer_adam()}
 }
 \value{
 (list) network: keras neural network model, \cr
@@ -55,6 +58,7 @@ library(cbnn)
 library(casebase)
 library(magrittr)
 data<-casebase::ERSPC
+data$ScrArm<-as.numeric(data$ScrArm)-1
 eventVar<-"DeadOfPrCa"
 timeVar<-"Follow.Up.Time"
 features<-"ScrArm"

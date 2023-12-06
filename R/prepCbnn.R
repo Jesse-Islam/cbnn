@@ -15,6 +15,7 @@
 #' @param eventVar (string) The event Feature in the data-set.
 #' @param ratio (numeric) Number of base-series samples per case-series samples. Default=100.
 #' @param compRisk (boolean) states if modeling competing risks or single event.
+#' @param kOptim ("keras.optimizers.adam.Adam") Optimizer of choice from keras. Default set to optimizer_adam()
 #' @return (list) network: keras neural network model, \cr
 #'  casebaseData: case-base sampled data,\cr
 #'  offset: offset defined by case-base sampling,\cr
@@ -26,6 +27,7 @@
 #' library(casebase)
 #' library(magrittr)
 #' data<-casebase::ERSPC
+#' data$ScrArm<-as.numeric(data$ScrArm)-1
 #' eventVar<-"DeadOfPrCa"
 #' timeVar<-"Follow.Up.Time"
 #' features<-"ScrArm"
@@ -35,7 +37,7 @@
 #' eventVar, ratio=10, compRisk=FALSE)
 #'
 #' @export
-prepCbnn<-function(features, nnInput, nnOutput, data,offset=NA, timeVar,eventVar, ratio=100, compRisk=FALSE){
+prepCbnn<-function(features, nnInput, nnOutput, data,offset=NA, timeVar,eventVar, ratio=100, compRisk=FALSE,kOptim=keras::optimizer_adam()){
   if(class(data)[1]=="cbData"){
     data<-data
   }else{
@@ -55,7 +57,7 @@ prepCbnn<-function(features, nnInput, nnOutput, data,offset=NA, timeVar,eventVar
 
   model%>% keras::compile(
     loss = 'binary_crossentropy',
-    optimizer = keras::optimizer_adam(decay=10^-9), #optimizer_rmsprop(lr = 0.001)
+    optimizer = kOptim,
     metrics = c('binary_accuracy')
   )
   features<-features[which(!(features %in% eventVar))]
