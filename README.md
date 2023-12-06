@@ -43,7 +43,7 @@ cumulativeIncidenceCurves<-cuIncCbnn(fit, times=times,x_test=x_test)
 ```
 
 
-I recommend going through the vignettes next, as it uses the complex simulation from the manuscript ( https://github.com/Jesse-Islam/cbnnManuscript ) as an example to better understand the implementation of CBNN on tabular data. For convenience, here is a link to the Time-varying-interactions-and-flexible-baseline-hazard vignette: https://github.com/Jesse-Islam/cbnn/tree/main/doc/Time-varying-interactions-and-flexible-baseline-hazard.html
+I recommend going through the vignette (https://github.com/Jesse-Islam/cbnn/tree/main/doc/Time-varying-interactions-and-flexible-baseline-hazard.html) next, as it uses the complex simulation from the manuscript ( https://github.com/Jesse-Islam/cbnnManuscript ) as an example to better understand the implementation of CBNN on tabular data.
 
 
 If you're interested in reproducing the results from the paper, the exact scripts used to generate the figures are available in https://github.com/Jesse-Islam/cbnnManuscript/tree/main/analyses.
